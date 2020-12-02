@@ -1,0 +1,13 @@
+[package]
+name = "cryptopals"
+version = "0.1.0"
+authors = ["Philippe Nadon <phil@nadon.io>"]
+edition = "2018"
+description = "Code for the Crypto Pals challenge, linked [here](https://cryptopals.com)"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+crypto = { path = "../crypto" }
+base64 = "0.13.0"
+
