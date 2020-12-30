@@ -38,7 +38,6 @@ fn num_to_hex(input: u8) -> char {
 #[cfg(test)]
 mod tests {
     use core::panic;
-    use crate::base64::bytes_to_base64;
 
     use super::*;
 

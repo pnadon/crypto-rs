@@ -67,18 +67,7 @@ pub fn break_repeating_key_xor(input: &str, min_keysize: usize, max_keysize: usi
         let keysize = dists.iter().position(|elem| elem == min_dist).unwrap() + min_keysize;
         dists.remove(keysize - min_keysize);
 
-        let mut trans_blocks = (0..keysize)
-            .map(|_| vec![])
-            .collect::<Vec<Vec<u8>>>();
-        
-        input.bytes().collect::<Vec<u8>>()
-            .chunks(keysize)
-            .for_each(|chunk| {
-                for (i, val) in chunk.iter().enumerate() {
-                    trans_blocks[i].push(*val);
-                }
-            }
-        );
+        let trans_blocks = transpose_blocks(input, keysize);
 
         let key = trans_blocks.into_iter()
             .map(move |block| {
@@ -92,6 +81,23 @@ pub fn break_repeating_key_xor(input: &str, min_keysize: usize, max_keysize: usi
         }
     }).filter_map(|key| key)
     .collect::<Vec<String>>()
+}
+
+fn transpose_blocks(input: &str, keysize: usize) -> Vec<Vec<u8>> {
+    let mut trans_blocks = (0..keysize)
+        .map(|_| vec![])
+        .collect::<Vec<Vec<u8>>>();
+    
+    input.bytes().collect::<Vec<u8>>()
+        .chunks(keysize)
+        .for_each(|chunk| {
+            for (i, val) in chunk.iter().enumerate() {
+                trans_blocks[i].push(*val);
+            }
+        }
+    );
+
+    trans_blocks
 }
 
 #[cfg(test)]
@@ -115,6 +121,15 @@ mod tests {
         assert_eq!(
             bytes_to_hex(repeating_key_xor("Burning 'em, if you ain't quick and nimble\nI go crazy when I hear a cymbal", "ICE")),
             "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
+        )
+    }
+
+    #[test]
+    fn test_transpose_blocks() {
+        let input = "hellobbbbbaaaaapqrst";
+        assert_eq!(
+            transpose_blocks(input, 5)[1],
+            vec![b'e', b'b', b'a', b'q'],
         )
     }
 }

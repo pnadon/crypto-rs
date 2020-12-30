@@ -5,8 +5,9 @@ pub mod repeating_key_xor;
 
 #[cfg(test)]
 mod tests {
+
     #[test]
-    fn it_works() {
-        assert_eq!(2 + 2, 4);
+    fn test_im_not_crazy() {
+        assert_eq!(b'c', 'c' as u8);
     }
 }
